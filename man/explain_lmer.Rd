@@ -7,10 +7,10 @@
 explain_lmer(model, details = "general")
 }
 \arguments{
-\item{model}{A fitted model object from \code{lme4::lmer()}.}
+\item{model}{A fitted model object from \code{\link[lme4:lmer]{lme4::lmer()}}.}
 
-\item{details}{Character. Specify which details to return: "general",
-"fixed", "random", or "full". Defaults to "general".}
+\item{details}{Character. Specify which details to return: \code{"general"} (the default),
+\code{"fixed"}, \code{"random"}, or \code{"full"}.}
 }
 \value{
 A character string with the interpretation of the model.

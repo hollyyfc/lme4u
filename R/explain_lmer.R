@@ -4,9 +4,9 @@ utils::globalVariables(c("term", "estimate", "interpretation", "."))
 #' Provides a user-friendly interpretation of a fitted lmer model's fixed and
 #' random effects.
 #'
-#' @param model A fitted model object from `lme4::lmer()`.
-#' @param details Character. Specify which details to return: "general",
-#'   "fixed", "random", or "full". Defaults to "general".
+#' @param model A fitted model object from [lme4::lmer()].
+#' @param details Character. Specify which details to return: `"general"` (the default),
+#'   `"fixed"`, `"random"`, or `"full"`.
 #'
 #' @returns A character string with the interpretation of the model.
 #'
@@ -20,6 +20,10 @@ explain_lmer <- function(model, details = "general") {
   # Check if the input is an lmer model
   if (!inherits(model, "merMod")) {
     stop("The input model must be a fitted lmer() object from the lme4 package.")
+  }
+  # Check the details argument is valid
+  if (!details %in% c("general", "fixed", "random", "full")) {
+    stop("Invalid value for 'details'. Choose from 'general', 'fixed', 'random', or 'full'.")
   }
 
   # Extract basic model information
@@ -62,18 +66,12 @@ explain_lmer <- function(model, details = "general") {
   }
 
   # Return interpretation based on user selection
-  if (details == "general") {
-    return(general_text)
-  } else if (details == "fixed") {
-    return(paste(general_text, fixed_text))
-  } else if (details == "random") {
-    return(paste(general_text, # random_text,
-                 random_var_text))
-  } else if (details == "full") {
-    return(paste(general_text, fixed_text, # random_text,
-                 random_var_text))
-  } else {
-    stop("Invalid value for 'details'. Choose from 'general', 'fixed', 'random', or 'full'.")
-  }
+  outputs <- list(
+    general = general_text,
+    fixed = paste(general_text, fixed_text),
+    random = paste(general_text, random_var_text),
+    full = paste(general_text, fixed_text, random_var_text)
+  )
+  return(outputs[[details]])
 
 }
