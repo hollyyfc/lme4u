@@ -6,7 +6,7 @@ utils::globalVariables(c("term", "estimate", "interpretation", "."))
 #'
 #' @param model A fitted model object from [lme4::lmer()].
 #' @param details Character. Specify which details to return: `"general"` (the default),
-#'   `"fixed"`, `"random"`, or `"full"`.
+#'   `"fixed"`, or `"random"`.
 #'
 #' @returns A character string with the interpretation of the model.
 #'
@@ -22,12 +22,17 @@ explain_lmer <- function(model, details = "general") {
     stop("The input model must be a fitted lmer() object from the lme4 package.")
   }
   # Check the details argument is valid
-  if (!details %in% c("general", "fixed", "random", "full")) {
-    stop("Invalid value for 'details'. Choose from 'general', 'fixed', 'random', or 'full'.")
+  if (!details %in% c("general", "fixed", "random")) {
+    stop("Invalid value for 'details'. Choose from 'general', 'fixed', or 'random'.")
+  }
+
+  # Extract formula and detect shorthand
+  model_formula <- stats::formula(model)
+  if (grepl("~\\s*\\.(\\s|\\+|\\-|\\)|$)", deparse(model_formula))) {
+    stop("Shorthand formulas using '.' are not supported. Please specify all fixed effect terms explicitly.")
   }
 
   # Extract basic model information
-  model_formula <- stats::formula(model)
   grouping_vars <- names(lme4::getME(model, "flist"))
   fixed_effects <- lme4::fixef(model) %>%
     as.data.frame() %>%
@@ -69,9 +74,9 @@ explain_lmer <- function(model, details = "general") {
   outputs <- list(
     general = general_text,
     fixed = paste(general_text, fixed_text),
-    random = paste(general_text, random_var_text),
-    full = paste(general_text, fixed_text, random_var_text)
+    random = paste(general_text, random_var_text)
   )
-  return(outputs[[details]])
+  cat(outputs[[details]])
+  invisible(outputs[[details]])
 
 }
