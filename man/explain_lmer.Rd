@@ -7,13 +7,29 @@
 explain_lmer(model, details = "general")
 }
 \arguments{
-\item{model}{A fitted model object from \code{\link[lme4:lmer]{lme4::lmer()}}.}
+\item{model}{A fitted model object from \code{\link[lme4:lmer]{lme4::lmer()}}. Currently not supporting formula
+that contains shorthand \code{.}, such as \code{y ~ .}.}
 
-\item{details}{Character. Specify which details to return: \code{"general"} (the default),
-\code{"fixed"}, or \code{"random"}.}
+\item{details}{A character specifying which details to return:
+\itemize{
+\item \code{"general"} (the default): a high-level summary of the model structure, fixed effects,
+and random effects with brief explanations.
+\item \code{"fixed"}: a more in-depth interpretation of fixed effects in the model context, with
+additional details on individual fixed effect estimates.
+\item \code{"random"}: a concise interpretation of each random term (including random intercept and
+slope), with insights from estimated variance components.
+}}
 }
 \value{
-A character string with the interpretation of the model.
+A character string with the interpretation of the model. Additional structured outputs
+are stored as attributes and can be accessed as follows:
+\itemize{
+\item for \code{details = "fixed"}: use \code{attr(, "fixed_details")} for individual fixed effect
+interpretation with model estimates; use \code{attr(, "fixed_names")} for all fixed effect
+variable names.
+\item for \code{details = "random"}: use \code{attr(, "var_details")} for insights regarding estimated
+variance components for random effects.
+}
 }
 \description{
 Provides a user-friendly interpretation of a fitted lmer model's fixed and
@@ -22,5 +38,17 @@ random effects.
 \examples{
 library(lme4)
 model <- lmer(Reaction ~ Days + (Days | Subject), data = sleepstudy)
+
+# For high-level summary
 explain_lmer(model)
+
+# For fixed-effect specific interpretation
+fix <- explain_lmer(model, "fixed")
+# Access individual fixed effect interpretation of model estimats
+attr(fix, "fixed_details")[["(Intercept)"]]
+
+# For random-effect specific interpretation
+random <- explain_lmer(model, "random")
+# Access variance component insights
+attr(random, "var_details")
 }

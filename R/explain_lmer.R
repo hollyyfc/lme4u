@@ -3,16 +3,40 @@
 #' Provides a user-friendly interpretation of a fitted lmer model's fixed and
 #' random effects.
 #'
-#' @param model A fitted model object from [lme4::lmer()].
-#' @param details Character. Specify which details to return: `"general"` (the default),
-#'   `"fixed"`, or `"random"`.
+#' @param model A fitted model object from [lme4::lmer()]. Currently not supporting formula
+#'   that contains shorthand `.`, such as `y ~ .`.
+#' @param details A character specifying which details to return:
+#'   * `"general"` (the default): a high-level summary of the model structure, fixed effects,
+#'   and random effects with brief explanations.
+#'   * `"fixed"`: a more in-depth interpretation of fixed effects in the model context, with
+#'   additional details on individual fixed effect estimates.
+#'   * `"random"`: a concise interpretation of each random term (including random intercept and
+#'   slope), with insights from estimated variance components.
 #'
-#' @returns A character string with the interpretation of the model.
+#' @returns A character string with the interpretation of the model. Additional structured outputs
+#'   are stored as attributes and can be accessed as follows:
+#'   * for `details = "fixed"`: use `attr(, "fixed_details")` for individual fixed effect
+#'   interpretation with model estimates; use `attr(, "fixed_names")` for all fixed effect
+#'   variable names.
+#'   * for `details = "random"`: use `attr(, "var_details")` for insights regarding estimated
+#'   variance components for random effects.
 #'
 #' @examples
 #' library(lme4)
 #' model <- lmer(Reaction ~ Days + (Days | Subject), data = sleepstudy)
+#'
+#' # For high-level summary
 #' explain_lmer(model)
+#'
+#' # For fixed-effect specific interpretation
+#' fix <- explain_lmer(model, "fixed")
+#' # Access individual fixed effect interpretation of model estimats
+#' attr(fix, "fixed_details")[["(Intercept)"]]
+#'
+#' # For random-effect specific interpretation
+#' random <- explain_lmer(model, "random")
+#' # Access variance component insights
+#' attr(random, "var_details")
 #' @export
 explain_lmer <- function(model, details = "general") {
 
