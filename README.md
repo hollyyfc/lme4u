@@ -3,6 +3,8 @@
 
 # lme4u <a href="https://github.com/hollyyfc/lme4u"><img src="man/figures/logo.png" align="right" height="138" alt="lme4u repo" /></a>
 
+Development Version 0.0.0.9000
+
 <!-- badges: start -->
 <!-- badges: end -->
 
@@ -33,8 +35,6 @@ install_github("hollyyfc/lme4u")
 ```
 
 ## Example
-
-This is a basic example which shows you how to solve a common problem:
 
 ``` r
 library(lme4u)
