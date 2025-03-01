@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# lme4u
+# lme4u <a href="https://github.com/hollyyfc/lme4u"><img src="man/figures/logo.png" align="right" height="138" alt="lme4u repo" /></a>
 
 <!-- badges: start -->
 <!-- badges: end -->
