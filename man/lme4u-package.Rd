@@ -6,6 +6,8 @@
 \alias{lme4u-package}
 \title{lme4u: Interpretation and Diagnostics for 'lme4' Hierarchical Models}
 \description{
+\if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
+
 Interpret and diagnose linear mixed-effects models fitted with 'lme4'. Provides tools for summarizing model output, visualizing random effects, assessing assumptions, and performing hypothesis tests.
 }
 \seealso{

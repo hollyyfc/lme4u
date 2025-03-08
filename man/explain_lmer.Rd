@@ -37,7 +37,7 @@ random effects.
 }
 \examples{
 library(lme4)
-model <- lmer(Reaction ~ Days + (Days | Subject), data = sleepstudy)
+model <- lmer(math ~ math_old + cltype + (cltype | school_id), data = star)
 
 # For high-level summary
 explain_lmer(model)

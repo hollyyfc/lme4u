@@ -23,7 +23,7 @@
 #'
 #' @examples
 #' library(lme4)
-#' model <- lmer(Reaction ~ Days + (Days | Subject), data = sleepstudy)
+#' model <- lmer(math ~ math_old + cltype + (cltype | school_id), data = star)
 #'
 #' # For high-level summary
 #' explain_lmer(model)
@@ -304,28 +304,45 @@ random_explain <- function(model) {
   term_s <- ifelse(num_random_terms == 1, "random term", "random terms")
   intro_text <- paste("There", is_are, num_random_terms, term_s,
                       "you fit in the model:\n\n")
+  # Find parent group for nesting structure
+  all_grouping_vars <- unlist(lapply(lme4::findbars(model_formula), function(x) {
+    trimws(strsplit(deparse(x), "\\|")[[1]][2])
+  }))
+  group_counts <- table(unlist(strsplit(all_grouping_vars, ":")))
+  max_count <- max(group_counts)
+  parent_candidates <- names(group_counts[group_counts == max_count])
 
   # Special note for models with too many random terms
   complexity_note <- if (num_random_terms > 2) {
-    "Note: This model contains multiple random effect terms, which may complicate interpretation. Implicit nesting that the function cannot detect might also be present.\n"
+    "Note: This model contains multiple random effect terms, which may complicate interpretation. Implicit nesting that the function cannot detect might also be present and yield incorrect interpretations.\n"
   } else {
     ""
   }
 
   # 1. Individual term interpretations
   random_effect_interpretations <- c()
+  seen_groups <- c()
+
   for (i in seq_along(random_structure)) {
 
     random_expr2 <- deparse(random_structure[[i]])
     split_term2 <- strsplit(random_expr2, "\\|")[[1]]
     slope_part2 <- trimws(split_term2[1])  # Before "|"
     group_var2 <- trimws(split_term2[2])   # After "|"
+
     # Detect nested structure
     is_nested <- grepl(":", group_var2)
     nesting_levels <- if (is_nested) strsplit(group_var2, ":")[[1]] else NULL
+    # Check if the assumed parent was seen before this term
+    if (is_nested) {
+      parent_seen_before <- any(parent_candidates %in% seen_groups)
+      is_regular <- parent_seen_before
+    } else {
+      is_regular <- FALSE  # Non-nested groups don't need order checking
+    }
+    seen_groups <- c(seen_groups, group_var2)
     # Detect uncorrelated random effects (double vertical bar)
     is_uncorrelated <- grepl("0", slope_part2)
-
 
     if (is_uncorrelated) {     # uncorrelated structure
 
@@ -341,8 +358,9 @@ random_explain <- function(model) {
 
     } else if (is_nested) {    # nested structure
 
+      if (is_regular) { nesting_levels <- rev(nesting_levels) }
       nesting_description <- paste(
-        paste0("'", rev(nesting_levels), "'"),
+        paste0("'", nesting_levels, "'"),
         collapse = " nested within "
       )
       slope_vars2 <- trimws(unlist(strsplit(slope_part2, "\\+")))
