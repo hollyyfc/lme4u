@@ -6,6 +6,8 @@
 Development Version 0.0.0.9000
 
 <!-- badges: start -->
+
+[![R-CMD-check](https://github.com/hollyyfc/lme4u/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/hollyyfc/lme4u/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 ## Overview
