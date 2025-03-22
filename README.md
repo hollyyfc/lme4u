@@ -3,8 +3,6 @@
 
 # lme4u <a href="https://github.com/hollyyfc/lme4u"><img src="man/figures/logo.png" align="right" height="138" alt="lme4u repo" /></a>
 
-Development Version 0.0.0.9000
-
 <!-- badges: start -->
 
 [![R-CMD-check](https://github.com/hollyyfc/lme4u/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/hollyyfc/lme4u/actions/workflows/R-CMD-check.yaml)
@@ -48,7 +46,7 @@ library(lme4u)
 - [x] Interpretation functions for `lmer()` outputs
 - [x] A curated dataset specifically for mixed-effects modeling
 - [ ] Model diagnostics and assumption checks
-- [ ] Hypothesis testing utilities
+- [x] Hypothesis testing utilities
 - [ ] Vignettes with real-world examples
 
 ## Contributing

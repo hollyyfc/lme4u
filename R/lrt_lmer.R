@@ -56,6 +56,7 @@
 #'
 #' @examples
 #' library(lme4)
+#' data(star)
 #' model <- lmer(math ~ math_old + cltype + (cltype | school_id), data = star)
 #'
 #' # Fixed effect testing
@@ -73,6 +74,10 @@ lrt_lmer <- function(model, target, type, data, has_interaction = FALSE, verbose
   if (!inherits(model, "merMod")) {
     stop("The input model must be a fitted lmer() object from the lme4 package.")
   }
+  # Check no missing input for the required fields
+  if (missing(target)) stop("You must supply `target`.")
+  if (missing(type)) stop("You must specify `type = 'fixed'` or `type = 'random'`.")
+  if (missing(data)) stop("You must supply the `data` used to fit the model.")
   # Check the type argument is valid
   if (!type %in% c("fixed", "random")) {
     stop("Invalid value for 'type'. Choose from 'fixed', or 'random'.")

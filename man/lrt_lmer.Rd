@@ -79,6 +79,7 @@ will be refitted with \code{REML = FALSE} to ensure accurate hypothesis testing.
 
 \examples{
 library(lme4)
+data(star)
 model <- lmer(math ~ math_old + cltype + (cltype | school_id), data = star)
 
 # Fixed effect testing
