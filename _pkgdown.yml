@@ -1,4 +1,15 @@
 url: ~
 template:
   bootstrap: 5
-
+  light-switch: true
+  theme: breeze-light
+  bslib:
+    pkgdown-nav-height: 80px
+    bg: "#DBE3F0"
+    fg: "#2b2f33"
+    primary: "#305f91"
+    base_font: {google: "Nunito"}
+    heading_font: {google: "Roboto Slab"}
+    font_size_base: 1.1rem
+    font_size_root: 18px
+    font_scale: 1.2
