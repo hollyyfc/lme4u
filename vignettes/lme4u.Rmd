@@ -76,7 +76,7 @@ fix <- explain_lmer(model, details = "fixed")
 attr(fix, "fixed_details")
 ```
 
-**NOTE**: if interaction is fitted to the model, the function is also able to detect and adjust the interpretation.
+**NOTE**: If interaction is fitted to the model, the function is also able to detect and adjust the interpretation.
 
 ### Random Effects
 
@@ -93,6 +93,62 @@ attr(random, "var_details")
 **NOTE**: The random part is also capable of detecting nested grouping structure, uncorrelated random effects, and multi-level random structures. However, use the interpretation deliberately under such complex cases.
 
 
-## Hypothesis Testing
+## Assumption Diagnostics
+
+(TBD)
+
+## Testing Effects
+
+Once you’ve interpreted your model and checked that assumptions reasonably hold, the next natural step is to test whether certain effects — fixed or random — meaningfully contribute to your model. `lrt_lmer()` provides likelihood ratio tests on a selected fixed or random effect in a fitted `lme4::lmer()` model. It aims to gauge the effect brought in by one single term and apply statistically accurate null distribution based on different effect types.
+
+Depending on whether you're testing a fixed effect or a random effect by the `type` argument, the structure of the reduced model differs. Currently, the function only supports lmer models with fixed effects and a **single** random structure (i.e., no nested `/`, double vertical `||`, or multi-level random effects). To see more about the testing logic and how the reduced models are constructed differently, run `?lrt_lmer`. 
+
+### Fixed Effects
+
+To test whether a selected fixed effect exists, specify the exact variable name in `target` and set `type = "fixed"`. This will allow the function to match with the underlying set of fixed terms. Running the function will give a summary of output, along with the test statistics being returned as a list:
+
+```{r}
+fix_result <- lrt_lmer(model, target = "math_old", type = "fixed", data = star)
+```
+
+```{r}
+fix_result
+```
+
+**NOTE**: If interaction is fitted to the model, specify `has_interaction = TRUE` in the input argument. The reduced model will be subsequently constructed without the selected fixed effect and any interaction terms containing it. 
+
+### Random Effects
+
+To test the excess heterogeneity contributed by a random effect term, specify the exact variable name in `target` and set `type = "random"`. Then, the function will check whether the target is a random intercept (grouping variable) or a random slope in the model, and apply corresponding computation for the likelihood ratio test.
+
+**_Random Intercept_**: The full model is reconstructed by modifying the original `lme4::lmer()` call to retain only the random intercept (ignoring any random slopes). The reduced model is a standard `stats::lm()` model containing only the fixed effects, and the likelihood ratio test follows a mixture Chi-square distribution for p-value computation.
+
+```{r}
+random_result1 <- lrt_lmer(model, target = "school_id", type = "random", data = star)
+```
+
+**_Random Slope_**: The target variable is only removed from the random slope structure. The reduced model remains an `lme4::lmer()` model, and the likelihood ratio test follows a mixture Chi-square distribution for p-value computation.
+
+```{r}
+random_result2 <- lrt_lmer(model, target = "cltype", type = "random", data = star)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
