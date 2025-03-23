@@ -1,0 +1,98 @@
+---
+title: "Getting Started with lme4u"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Getting Started with lme4u}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup, message=FALSE}
+library(lme4u)
+library(lme4)
+```
+
+## Welcome to `lme4u`
+
+Hierarchical (or mixed-effects) models are essential tools for analyzing data with grouped or nested structure — think students within schools or patients within hospitals. And when it comes to fitting these models in R, the `lme4` package is the go-to hub. 
+
+While `lme4` offers incredible modeling features, it can also be hard to wrap your head around. Many users — especially those transitioning from `stats::lm()` to `lme4::lmer()` or even `lme4::glmer()` — find themselves overwhelmed by the jump in complexity: random intercepts and slopes, link-scale estimates, nested structures, and more. That’s where `lme4u` comes into play.
+
+Built directly on top of lme4, this package is designed to help you **interpret**, **diagnose**, and **hypothesis-test** your mixed models with clarity and confidence. Whether you're a student learning mixed models for the first time or a researcher working with real-world grouped data, `lme4u` walks you through the process with practical explanations and inspiring tools.
+
+
+## Example Context: Students in Schools
+
+### The Data
+
+`lme4u` comes with a built-in dataset, `star`, a cleaned subset of the well-known [*Project STAR*](https://search.r-project.org/CRAN/refmans/AER/html/STAR.html) (student-teacher achievement ratio) data. The original dataset follows students across elementary school years in Tennessee, aiming to study the effect of class size on student test performance. The processed version in `lme4u` focuses on student performance in third grade, ensuring a hierarchical structure where students are nested within schools.
+
+The shape of `star` is 4192 * 13, which includes a subset of key variables related to student demographics, prior-year (2nd grade) and current-year (3rd grade) test scores, class assignment, teacher qualifications, and school-level identifiers. All students in this dataset have been controlled as attending the same school in both 2nd and 3rd grades. To view details and data dictionary, run `?star` after loading `lme4u` into your workspace.
+
+### The Model
+
+Under the context of `star`, suppose we're intersted in understanding: 
+
+> *How does class type affect student math performance, after accounting for prior achievements?
+And does this relationship vary across schools?*
+
+This type of question is common in education research, where students are grouped within schools, and both individual- and group-level heterogeneity contribute to outcomes. In R using `lme4`, this would be implemented as:
+
+```{r}
+model <- lmer(math ~ cltype + math_old + (cltype | school_id), data = star)
+```
+
+Of course, there could be other ways of modeling the relation. But we will use this specific model to demonstrate how `lme4u` makes interpretation and diagnostics easier throughout the vignette. 
+
+
+## Interpreting the Model
+
+Immediately after the model fit, you might start wondering whether the model structure is appropriate, or simply, what the formula means statistically. A core component of the package, `explain_lmer()`, provides structured, user-friendly interpretations of linear mixed effects models fitted using `lme4::lmer()`. This function is designed to bridge the gap between raw model output and intuitive understanding, making it easier for users to interpret their model structure and results.
+
+### General Summary
+
+`explain_lmer()` supports three levels of interpretation via the `details` argument. By default, `"general"` will be run if no argument supplied to `details`, which provides a high-level summary of the model, describing its structure, fixed effects, and random effects in a concise yet informative manner:
+
+```{r}
+explain_lmer(model)
+```
+
+### Fixed Effects
+
+If `"fixed"` is input, the function offers a detailed explanation of the fixed effects, including interpretations of individual estimates and their implications within the model context:
+
+```{r}
+fix <- explain_lmer(model, details = "fixed")
+```
+
+```{r}
+attr(fix, "fixed_details")
+```
+
+**NOTE**: if interaction is fitted to the model, the function is also able to detect and adjust the interpretation.
+
+### Random Effects
+
+If `"random"` is input, the function focuses on random effects, explaining random intercepts, slopes, and variance components to highlight across-group variability:
+
+```{r}
+random <- explain_lmer(model, details = "random")
+```
+
+```{r}
+attr(random, "var_details")
+```
+
+**NOTE**: The random part is also capable of detecting nested grouping structure, uncorrelated random effects, and multi-level random structures. However, use the interpretation deliberately under such complex cases.
+
+
+## Hypothesis Testing
+
+
