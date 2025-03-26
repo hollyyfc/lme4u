@@ -14,6 +14,7 @@ Interpret and diagnose linear mixed-effects models fitted with 'lme4'. Provides 
 Useful links:
 \itemize{
   \item \url{https://github.com/hollyyfc/lme4u}
+  \item \url{https://hollyyfc.github.io/lme4u/}
   \item Report bugs at \url{https://github.com/hollyyfc/lme4u/issues}
 }
 
