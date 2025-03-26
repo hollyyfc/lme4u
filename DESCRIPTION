@@ -1,6 +1,6 @@
 Package: lme4u
 Title: Interpretation and Diagnostics for 'lme4' Hierarchical Models
-Version: 0.0.0.9000
+Version: 0.1.0.9000
 Authors@R: 
     person("Holly", "Cui", , "hollycui1218@gmail.com", role = c("aut", "cre"))
 Description: Interpret and diagnose linear mixed-effects models fitted with 'lme4'. Provides tools for
