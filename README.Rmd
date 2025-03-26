@@ -33,8 +33,7 @@ lme4u is an interpretation and diagnostic tool for linear mixed-effects models f
 You can install the development version of lme4u from [GitHub](https://github.com/) with:
 
 ```{r, eval=FALSE}
-library(devtools)
-install_github("hollyyfc/lme4u")
+devtools::install_github("hollyyfc/lme4u")
 ```
 
 ## Example

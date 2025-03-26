@@ -30,8 +30,7 @@ You can install the development version of lme4u from
 [GitHub](https://github.com/) with:
 
 ``` r
-library(devtools)
-install_github("hollyyfc/lme4u")
+devtools::install_github("hollyyfc/lme4u")
 ```
 
 ## Example
