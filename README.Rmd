@@ -39,18 +39,27 @@ install_github("hollyyfc/lme4u")
 
 ## Example
 
-```{r example, eval=FALSE}
+```{r example, message=FALSE}
 library(lme4u)
-## Example to be added soon ...
+library(lme4)
+
+# Access built-in dataset
+tibble::glimpse(star)
+
+# Construct a linear mixed-effect model with star
+model <- lmer(math ~ cltype + math_old + (cltype | school_id), data = star)
+
+# General interpretation of model structure
+explain_lmer(model)
+
+# Hypothesis testing of effects
+fix_result <- lrt_lmer(model, target = "math_old", type = "fixed", data = star)
+
+# Peek returned test statistics
+fix_result
+
+# More to be added ...
 ```
-
-## Features in Progress
-
-- [x] Interpretation functions for `lmer()` outputs
-- [x] A curated dataset specifically for mixed-effects modeling
-- [ ] Model diagnostics and assumption checks
-- [x] Hypothesis testing utilities
-- [ ] Vignettes with real-world examples
 
 ## Contributing
 

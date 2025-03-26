@@ -56,14 +56,17 @@
 #'
 #' @examples
 #' library(lme4)
-#' data(star)
 #' model <- lmer(math ~ math_old + cltype + (cltype | school_id), data = star)
 #'
 #' # Fixed effect testing
 #' fix_result <- lrt_lmer(model, target = "math_old", type = "fixed", data = star)
+#'
 #' fix_result
-#' # Random effect testing
+#'
+#' # Random intercept testing
 #' random_result1 <- lrt_lmer(model, target = "school_id", type = "random", data = star)
+#'
+#' # Random slope testing
 #' random_result2 <- lrt_lmer(model, target = "cltype", type = "random", data = star)
 #'
 #' @export

@@ -44,11 +44,13 @@ explain_lmer(model)
 
 # For fixed-effect specific interpretation
 fix <- explain_lmer(model, "fixed")
+
 # Access individual fixed effect interpretation of model estimats
 attr(fix, "fixed_details")[["(Intercept)"]]
 
 # For random-effect specific interpretation
 random <- explain_lmer(model, "random")
+
 # Access variance component insights
 attr(random, "var_details")
 }
