@@ -3,7 +3,7 @@ pkgdown: 2.1.1
 pkgdown_sha: ~
 articles:
   lme4u: lme4u.html
-last_built: 2025-03-26T19:12Z
+last_built: 2025-04-05T22:56Z
 urls:
   reference: https://hollyyfc.github.io/lme4u/reference
   article: https://hollyyfc.github.io/lme4u/articles
