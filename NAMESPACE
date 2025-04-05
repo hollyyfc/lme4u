@@ -2,4 +2,8 @@
 
 export(explain_lmer)
 export(lrt_lmer)
+export(res_box)
+export(res_fit)
+export(res_norm)
 importFrom(magrittr,"%>%")
+importFrom(rlang,.data)
