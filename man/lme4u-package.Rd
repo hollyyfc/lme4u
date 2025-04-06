@@ -8,7 +8,7 @@
 \description{
 \if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
 
-Interpret and diagnose linear mixed-effects models fitted with 'lme4'. Provides tools for summarizing model output, visualizing random effects, assessing assumptions, and performing hypothesis tests.
+Interpret and diagnose linear mixed-effects models fitted with 'lme4'. Provides tools for summarizing model output, visualizing assumptions checks, and performing hypothesis tests.
 }
 \seealso{
 Useful links:

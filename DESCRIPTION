@@ -4,8 +4,7 @@ Version: 0.1.0.9000
 Authors@R: 
     person("Holly", "Cui", , "hollycui1218@gmail.com", role = c("aut", "cre"))
 Description: Interpret and diagnose linear mixed-effects models fitted with 'lme4'. Provides tools for
-    summarizing model output, visualizing random effects, assessing assumptions, and performing
-    hypothesis tests.
+    summarizing model output, visualizing assumptions checks, and performing hypothesis tests. 
 License: GPL (>= 3)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)

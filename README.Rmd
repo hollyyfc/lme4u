@@ -26,7 +26,7 @@ lme4u is an interpretation and diagnostic tool for linear mixed-effects models f
 - **Interpretive functions** that translate `lmer()` output into user-friendly explanations.
 - **Diagnostic tools** for checking model assumptions and visualizing hierarchical structures.
 - **Hypothesis testing utilities** to facilitate model comparison and statistical inference.
-- **Support for nested and complex structures**, helping users understand random effects.
+- **Curated data** for the purpose of exploring mixed-effect models. 
 
 ## Installation
 
@@ -34,30 +34,59 @@ You can install the development version of lme4u from [GitHub](https://github.co
 
 ```{r, eval=FALSE}
 devtools::install_github("hollyyfc/lme4u")
+
+# Alternatively:
+# install.packages("pak")
+pak::pak("hollyyfc/lme4u")
 ```
 
 ## Example
 
-```{r example, message=FALSE}
+lme4u is built to assist with lme4 modeling, so make sure both packages are properly loaded:
+
+```{r example-load, message=FALSE}
 library(lme4u)
 library(lme4)
+```
 
-# Access built-in dataset
-tibble::glimpse(star)
+### To Interpret 
 
-# Construct a linear mixed-effect model with star
-model <- lmer(math ~ cltype + math_old + (cltype | school_id), data = star)
+This core interpretation function provides user-friendly explanation of a fitted lmer model's fixed and random effects:
 
-# General interpretation of model structure
-explain_lmer(model)
+```{r example1, message=FALSE}
+model <- lme4::lmer(math ~ cltype + math_old + (cltype | school_id), data = star)
 
-# Hypothesis testing of effects
+explain_lmer(model, details = "general")
+```
+
+### To Test Hypothesis
+
+Conduct likelihood ratio test (LRT) on a selected fixed or random effect in a fitted lmer model:
+
+```{r example2, message=FALSE}
 fix_result <- lrt_lmer(model, target = "math_old", type = "fixed", data = star)
 
-# Peek returned test statistics
 fix_result
+```
 
-# More to be added ...
+### To Check Assumptions
+
+Gain insights on within-group heterogeneity with core residual plots:
+
+```{r example3, message=FALSE, out.width="80%"}
+library(ggplot2)
+
+res_norm(model)
+res_fit(model)
+res_box(model, group_var = "school_id")
+```
+
+### To Explore
+
+Utilize this fresh dataset curated specifically for mixed-effect modeling:
+
+```{r example4, message=FALSE}
+tibble::glimpse(star)
 ```
 
 ## Contributing
