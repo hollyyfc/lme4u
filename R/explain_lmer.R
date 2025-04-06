@@ -43,7 +43,7 @@
 explain_lmer <- function(model, details = "general") {
 
   # Check if the input is an lmer model
-  if (!inherits(model, "merMod")) {
+  if (!inherits(model, "lmerMod")) {
     stop("The input model must be a fitted lmer() object from the lme4 package.")
   }
   # Check the details argument is valid

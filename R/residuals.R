@@ -140,7 +140,7 @@ res_box <- function(model, group_var) {
 # Helpers -----------------------------------------------------------
 model_check <- function(model) {
   # Check if the input is an lmer model
-  if (!inherits(model, "merMod")) {
+  if (!inherits(model, "lmerMod")) {
     stop("The input model must be a fitted lmer() object from the lme4 package.")
   }
   # Check if shorthand is used

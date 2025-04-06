@@ -1,9 +1,26 @@
 ######## Reject non-lmer objects ########
-test_that("lrt_lmer() rejects non-lmer objects", {
+test_that("lrt_lmer() rejects lm objects", {
   skip_if_not(requireNamespace("lme4", quietly = TRUE), "lme4 package required but not installed.")
 
   lm_model <- lm(mpg ~ hp, data = mtcars)
   expect_error(lrt_lmer(lm_model, target = "hp", type = "fixed", data = mtcars),
+               regexp = "The input model must be a fitted lmer() object from the lme4 package.",
+               fixed = TRUE)
+})
+
+test_that("lrt_lmer() rejects glmer objects", {
+  skip_if_not(requireNamespace("lme4", quietly = TRUE), "lme4 package required but not installed.")
+
+  df_glmer <- data.frame(
+    y = c(0, 1, 0, 1, 0, 1, 1, 0, 1, 0),
+    x = c(1, 2, 1, 3, 2, 4, 3, 1, 2, 3),
+    group = rep(c("A", "B"), each = 5)
+  )
+
+  glme_model <- suppressMessages(lme4::glmer(y ~ x + (1 | group),
+                                             data = df_glmer,
+                                             family = binomial(link = "logit")))
+  expect_error(lrt_lmer(glme_model, target = "x", type = "fixed", data = df_glmer),
                regexp = "The input model must be a fitted lmer() object from the lme4 package.",
                fixed = TRUE)
 })
@@ -31,7 +48,7 @@ test_that("lrt_lmer() detects shorthand notation", {
 
   mydata <- mtcars
   mydata$cyl <- as.factor(mydata$cyl)
-  model <- lme4::lmer(mpg ~ . + (1 | cyl), data = mydata)
+  model <- suppressMessages(lme4::lmer(mpg ~ . + (1 | cyl), data = mydata))
   expect_error(lrt_lmer(model, target = "disp", type = "fixed", data = mydata),
                "Shorthand formulas using '.' are not supported. Please specify all fixed effect terms explicitly.")
 })

@@ -74,7 +74,7 @@ lrt_lmer <- function(model, target, type, data, has_interaction = FALSE, verbose
 
   # Basic Error Handling ////////////////////////////////////////
   # Check if the input is an lmer model
-  if (!inherits(model, "merMod")) {
+  if (!inherits(model, "lmerMod")) {
     stop("The input model must be a fitted lmer() object from the lme4 package.")
   }
   # Check no missing input for the required fields
