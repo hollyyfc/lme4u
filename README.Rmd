@@ -73,7 +73,7 @@ fix_result
 
 Gain insights on within-group heterogeneity with core residual plots:
 
-```{r example3, message=FALSE, out.width="80%"}
+```{r example3, message=FALSE, out.width="80%", fig.alt = "A suite of residuals diagnostics plots showing within-group assumptions are met for the example model."}
 library(ggplot2)
 
 res_norm(model)

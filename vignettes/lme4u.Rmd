@@ -17,6 +17,7 @@ knitr::opts_chunk$set(
 ```{r setup, message=FALSE}
 library(lme4u)
 library(lme4)
+library(ggplot2)
 ```
 
 ## Welcome to `lme4u`
@@ -38,7 +39,7 @@ The shape of `star` is 4192 * 13, which includes a subset of key variables relat
 
 ### The Model
 
-Under the context of `star`, suppose we're intersted in understanding: 
+Under the context of `star`, suppose we're interested in understanding: 
 
 > *How does class type affect student math performance, after accounting for prior achievements?
 And does this relationship vary across schools?*
@@ -95,7 +96,39 @@ attr(random, "var_details")
 
 ## Assumption Diagnostics
 
-(TBD)
+Understanding the model structure is just a step-one. Now the critical question shifts to whether the model assumptions are reasonably satisfied. In the context of linear mixed-effect models, assumption diagnostics usually consider the following:
+
+- Within-Group Variation
+  - Residuals are **independent**
+  - Residuals have **equal variance** in each group (homoscedasticity)
+  - Residuals follow a roughly **normal** distribution
+- Between-Group Variation
+  - Group-specific effects (e.g., intercepts or slopes) are **independent** 
+  - Group-specific effects follow a roughly **normal** distribution
+
+Using the suite of residuals functions in `lme4u` (`res_norm()`, `res_fit()`, `res_box()`), you could gain insights into the within-group heterogeneity and detect possible violations through the plots. Note that due to the varying nature of complex random structures, between-group assumptions are not included in the package. 
+
+### Normality of Residuals
+
+From the QQ plot, we can see the residual dots generally follow the normality line, suggesting a meet of the assumption:
+```{r, fig.alt = "A QQ plot showing residuals roughly follow a normal distribution."}
+res_norm(model)
+```
+
+### Mean-Variance Relationship
+
+The residuals vs. fitted plot does not exhibit the classic funnel-shaped pattern, suggesting that the assumption of constant variance (homoscedasticity) is reasonably met. Consider variable transformations if you do notice funneling or specific patterns:
+```{r, fig.alt = "A residuals vs fitted plot showing constant variance without funnel shape or patterns."}
+res_fit(model)
+```
+
+### Homoscedasticity
+
+The boxplot of residuals by school shows relatively consistent spread across most groups, suggesting that the assumption of equal residual variance within groups is reasonably satisfied:
+```{r, fig.alt = "A boxplot of residuals by group showing equal variance across groups."}
+res_box(model, group_var = "school_id")
+```
+
 
 ## Testing Effects
 

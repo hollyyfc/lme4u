@@ -102,19 +102,19 @@ library(ggplot2)
 res_norm(model)
 ```
 
-<img src="man/figures/README-example3-1.png" width="80%" />
+<img src="man/figures/README-example3-1.png" alt="A suite of residuals diagnostics plots showing within-group assumptions are met for the example model." width="80%" />
 
 ``` r
 res_fit(model)
 ```
 
-<img src="man/figures/README-example3-2.png" width="80%" />
+<img src="man/figures/README-example3-2.png" alt="A suite of residuals diagnostics plots showing within-group assumptions are met for the example model." width="80%" />
 
 ``` r
 res_box(model, group_var = "school_id")
 ```
 
-<img src="man/figures/README-example3-3.png" width="80%" />
+<img src="man/figures/README-example3-3.png" alt="A suite of residuals diagnostics plots showing within-group assumptions are met for the example model." width="80%" />
 
 ### To Explore
 
