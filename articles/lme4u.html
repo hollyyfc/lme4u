@@ -76,7 +76,8 @@
     
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/hollyyfc/lme4u" class="external-link">lme4u</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/lme4/lme4/" class="external-link">lme4</a></span><span class="op">)</span></span></code></pre></div>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/lme4/lme4/" class="external-link">lme4</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span></code></pre></div>
 <div class="section level2">
 <h2 id="welcome-to-lme4u">Welcome to <code>lme4u</code><a class="anchor" aria-label="anchor" href="#welcome-to-lme4u"></a>
 </h2>
@@ -125,7 +126,7 @@ workspace.</p>
 <div class="section level3">
 <h3 id="the-model">The Model<a class="anchor" aria-label="anchor" href="#the-model"></a>
 </h3>
-<p>Under the context of <code>star</code>, suppose we’re intersted in
+<p>Under the context of <code>star</code>, suppose we’re interested in
 understanding:</p>
 <blockquote>
 <p><em>How does class type affect student math performance, after
@@ -240,7 +241,66 @@ such complex cases.</p>
 <div class="section level2">
 <h2 id="assumption-diagnostics">Assumption Diagnostics<a class="anchor" aria-label="anchor" href="#assumption-diagnostics"></a>
 </h2>
-<p>(TBD)</p>
+<p>Understanding the model structure is just a step-one. Now the
+critical question shifts to whether the model assumptions are reasonably
+satisfied. In the context of linear mixed-effect models, assumption
+diagnostics usually consider the following:</p>
+<ul>
+<li>Within-Group Variation
+<ul>
+<li>Residuals are <strong>independent</strong>
+</li>
+<li>Residuals have <strong>equal variance</strong> in each group
+(homoscedasticity)</li>
+<li>Residuals follow a roughly <strong>normal</strong> distribution</li>
+</ul>
+</li>
+<li>Between-Group Variation
+<ul>
+<li>Group-specific effects (e.g., intercepts or slopes) are
+<strong>independent</strong>
+</li>
+<li>Group-specific effects follow a roughly <strong>normal</strong>
+distribution</li>
+</ul>
+</li>
+</ul>
+<p>Using the suite of residuals functions in <code>lme4u</code>
+(<code><a href="../reference/residuals.html">res_norm()</a></code>, <code><a href="../reference/residuals.html">res_fit()</a></code>,
+<code><a href="../reference/residuals.html">res_box()</a></code>), you could gain insights into the within-group
+heterogeneity and detect possible violations through the plots. Note
+that due to the varying nature of complex random structures,
+between-group assumptions are not included in the package.</p>
+<div class="section level3">
+<h3 id="normality-of-residuals">Normality of Residuals<a class="anchor" aria-label="anchor" href="#normality-of-residuals"></a>
+</h3>
+<p>From the QQ plot, we can see the residual dots generally follow the
+normality line, suggesting a meet of the assumption:</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/residuals.html">res_norm</a></span><span class="op">(</span><span class="va">model</span><span class="op">)</span></span></code></pre></div>
+<p><img src="lme4u_files/figure-html/unnamed-chunk-8-1.png" alt="A QQ plot showing residuals roughly follow a normal distribution." width="700"></p>
+</div>
+<div class="section level3">
+<h3 id="mean-variance-relationship">Mean-Variance Relationship<a class="anchor" aria-label="anchor" href="#mean-variance-relationship"></a>
+</h3>
+<p>The residuals vs. fitted plot does not exhibit the classic
+funnel-shaped pattern, suggesting that the assumption of constant
+variance (homoscedasticity) is reasonably met. Consider variable
+transformations if you do notice funneling or specific patterns:</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/residuals.html">res_fit</a></span><span class="op">(</span><span class="va">model</span><span class="op">)</span></span></code></pre></div>
+<p><img src="lme4u_files/figure-html/unnamed-chunk-9-1.png" alt="A residuals vs fitted plot showing constant variance without funnel shape or patterns." width="700"></p>
+</div>
+<div class="section level3">
+<h3 id="homoscedasticity">Homoscedasticity<a class="anchor" aria-label="anchor" href="#homoscedasticity"></a>
+</h3>
+<p>The boxplot of residuals by school shows relatively consistent spread
+across most groups, suggesting that the assumption of equal residual
+variance within groups is reasonably satisfied:</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/residuals.html">res_box</a></span><span class="op">(</span><span class="va">model</span>, group_var <span class="op">=</span> <span class="st">"school_id"</span><span class="op">)</span></span></code></pre></div>
+<p><img src="lme4u_files/figure-html/unnamed-chunk-10-1.png" alt="A boxplot of residuals by group showing equal variance across groups." width="700"></p>
+</div>
 </div>
 <div class="section level2">
 <h2 id="testing-effects">Testing Effects<a class="anchor" aria-label="anchor" href="#testing-effects"></a>
@@ -269,7 +329,7 @@ variable name in <code>target</code> and set
 the underlying set of fixed terms. Running the function will give a
 summary of output, along with the test statistics being returned as a
 list:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fix_result</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/lrt_lmer.html">lrt_lmer</a></span><span class="op">(</span><span class="va">model</span>, target <span class="op">=</span> <span class="st">"math_old"</span>, type <span class="op">=</span> <span class="st">"fixed"</span>, data <span class="op">=</span> <span class="va">star</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Likelihood Ratio Test for 'math_old' (fixed effect)</span></span>
 <span><span class="co">#&gt; Full Model: math ~ cltype + math_old + (cltype | school_id)</span></span>
@@ -279,7 +339,7 @@ list:</p>
 <span><span class="co">#&gt; - Degrees of Freedom: 1 (Difference in estimated parameters)</span></span>
 <span><span class="co">#&gt; - P-Value: &lt; 2.2e-16 (Chi-square test)</span></span>
 <span><span class="co">#&gt; Since p = &lt; 2.2e-16, under alpha level of 0.05, we reject the null hypothesis. The test suggests that the fixed effect of math_old is statistically significant and contributes to the model.</span></span></code></pre></div>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fix_result</span></span>
 <span><span class="co">#&gt; $logLik</span></span>
 <span><span class="co">#&gt; [1] 3202.807</span></span>
@@ -309,7 +369,7 @@ to retain only the random intercept (ignoring any random slopes). The
 reduced model is a standard <code><a href="https://rdrr.io/r/stats/lm.html" class="external-link">stats::lm()</a></code> model containing
 only the fixed effects, and the likelihood ratio test follows a mixture
 Chi-square distribution for p-value computation.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">random_result1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/lrt_lmer.html">lrt_lmer</a></span><span class="op">(</span><span class="va">model</span>, target <span class="op">=</span> <span class="st">"school_id"</span>, type <span class="op">=</span> <span class="st">"random"</span>, data <span class="op">=</span> <span class="va">star</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Likelihood Ratio Test for 'school_id' (random intercept effect)</span></span>
 <span><span class="co">#&gt; Full Model: math ~ cltype + math_old + (1 | school_id)</span></span>
@@ -323,7 +383,7 @@ Chi-square distribution for p-value computation.</p>
 removed from the random slope structure. The reduced model remains an
 <code><a href="https://rdrr.io/pkg/lme4/man/lmer.html" class="external-link">lme4::lmer()</a></code> model, and the likelihood ratio test follows a
 mixture Chi-square distribution for p-value computation.</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">random_result2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/lrt_lmer.html">lrt_lmer</a></span><span class="op">(</span><span class="va">model</span>, target <span class="op">=</span> <span class="st">"cltype"</span>, type <span class="op">=</span> <span class="st">"random"</span>, data <span class="op">=</span> <span class="va">star</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Likelihood Ratio Test for 'cltype' (random slope effect)</span></span>
 <span><span class="co">#&gt; Full Model: math ~ cltype + math_old + (cltype | school_id)</span></span>
